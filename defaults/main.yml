@@ -1,0 +1,7 @@
+# General settings
+---
+
+# mysql
+mysql_ram_disk: false
+mysql_bind_address: '0.0.0.0'
+mysql_max_allowed_packet: '32M'

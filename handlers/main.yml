@@ -1,0 +1,19 @@
+---
+##
+# MySQL handlers
+#
+
+- name: stop mysql
+  service: name=mysql state=stopped
+
+- name: MySQL | Clearing InnoDB log files.
+  command: rm -f {{ item }}
+  with_items:
+    - /var/lib/mysql/ib_logfile0
+    - /var/lib/mysql/ib_logfile1
+
+- name: restart mysql
+  service: name=mysql state=restarted
+
+- name: MySQL | Configuring root access
+  command: mysql -uroot mysql -e "UPDATE user SET host='%' WHERE user='root' AND host='{{ ansible_hostname }}'; FLUSH PRIVILEGES";

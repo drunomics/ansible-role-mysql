@@ -1,0 +1,23 @@
+[mysqld]
+# Set the buffer pool size to 80% or more of available RAM for a dedicated InnoDB only machine.
+# Set the size to upto 50% of available RAM on a dedicated MySQL machine if you have a mix of MyISAM and InnoDB tables.
+# Set the size to 50% of RAM you have allocated to MySQL for a machine that is not dedicated to MySQL only.
+innodb_buffer_pool_size = 256M
+
+# More-Memory for innodb internal stuff. Defaults to 8M.
+innodb_additional_mem_pool_size=20M
+
+# Highler log files mean less disk writes, but longer recovery.
+# When changed, remove the log files before starting mysql again.
+innodb_log_file_size=250M
+
+#max. 20 concurrent queries, default: 8
+innodb_thread_concurrency = 20
+
+# Flush the log only once per second not for each write.
+# This disables ACID compliance for speed, what makes it more behave like MyISAM.
+innodb_flush_log_at_trx_commit = 2
+
+#Skip innodb-recovery, only use when recovering fails!!!
+#see http://dev.mysql.com/doc/refman/5.1/en/forcing-recovery.html
+#innodb_force_recovery = 2
