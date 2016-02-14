@@ -1,0 +1,6 @@
+# Include for for tasks containing test assertions.
+---
+- name: Assert that mysql is running and listening
+  shell: >
+    netstat -tunlp | grep ":3306 "
+  tags: assert

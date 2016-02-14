@@ -1,2 +1,40 @@
 ---
-- include: mysql.yml tags=mysql
+##
+# MySQL
+#
+
+- name: Install required packages
+  apt: pkg={{ item }} state=present
+  with_items:
+    - mysql-server
+    - mysql-client
+  notify:
+   - MySQL | Configuring root access
+
+- name: Checking...
+  service: name=mysql state="started"
+  register: mysql_started
+  ignore_errors: True
+
+- name: "Reparing mysql..."
+  shell: "echo Do nothing besides notifying"
+  notify:
+   - MySQL | Clearing InnoDB log files.
+   - restart mysql
+   - MySQL | Configuring root access
+  when: mysql_started|failed
+
+- name: Configure the MySQL server
+  template: src=etc-mysql-conf-d-ansible-cnf.j2 dest=/etc/mysql/conf.d/ansible.cnf mode=644
+  notify: restart mysql
+
+- name: Configure the MySQL server for InnoDB
+  template: src=etc-mysql-conf-d-innodb-cnf.j2 dest=/etc/mysql/conf.d/innodb.cnf mode=644
+  notify:
+   - stop mysql
+   - MySQL | Clearing InnoDB log files.
+   - restart mysql
+
+- name: Prepare MySQL upstart config
+  template: src=etc-init-mysql-conf.j2 dest=/etc/init/mysql.conf mode=644
+  notify: restart mysql
