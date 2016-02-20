@@ -1,7 +1,46 @@
-# General settings
+# MySQL settings.
 ---
-
-# mysql
 mysql_ram_disk: false
 mysql_bind_address: '127.0.0.1'
 mysql_max_allowed_packet: '32M'
+mysql_table_open_cache: 1024
+# By default, give up on ACID compliance for better speed.
+mysql_innodb_flush_log_at_trx_commit: 2
+
+# Memory-related values are calculated based upon the mysql_memory_factor.
+# Doubling the factor will double used memory and all memory related variables,
+# including max connections.
+# A value of 1 means ~256M memory usage of MySQL with max 50 connections.
+# By default, we go with low-memory of 1.
+mysql_memory_factor: 1
+
+# Each connection takes approximately 3M (independent of the factor). Thus, for
+# example, adding 50 connections takes 150M extra.
+mysql_max_connections: "{{ (50 * mysql_memory_factor)|int }}"
+# Max connections per user, in percentage of max connections.
+mysql_max_user_connections_percentage: 100
+
+# Examples:
+# - 256M:
+#   mysql_memory_factor: 1
+#   mysql_max_connections: 50 (default)
+# - 512M:
+#   mysql_memory_factor: 2
+#   mysql_max_connections: 100 (default)
+# - 556M:
+#   mysql_memory_factor: 1
+#   mysql_max_connections: 150 (100 extra)
+# - 662M:
+#   mysql_memory_factor: 2
+#   mysql_max_connections: 150 (50 extra)
+
+## Below are memory related settings, making use of the factor by default:
+mysql_key_buffer_size: "{{ (16 * mysql_memory_factor)|int }}M"
+mysql_query_cache_limit: "{{ (1 * mysql_memory_factor)|int }}M"
+mysql_query_cache_size: "{{ (16 * mysql_memory_factor)|int }}M"
+mysql_tmp_table_size: "{{ (16 * mysql_memory_factor)|int }}M"
+
+# For tunning innodb variables, check comments in the innodb.conf template.
+mysql_innodb_buffer_pool_size: "{{ (64 * mysql_memory_factor)|int }}M"
+mysql_innodb_additional_mem_pool_size: "{{ (8 * mysql_memory_factor)|int }}M"
+mysql_innodb_log_file_size: "{{ (64 * mysql_memory_factor)|int }}M"

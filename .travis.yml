@@ -6,6 +6,7 @@ services:
   - docker
 env:
   - playbook: test-defaults.yml
+  - playbook: test-memory-float.yml
 
 before_install:
   # Install Ansible.
