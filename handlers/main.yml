@@ -13,7 +13,7 @@
     - /var/lib/mysql/ib_logfile1
 
 - name: restart mysql
-  service: name=mysql state=started
+  service: name=mysql state=restarted
 
 - name: MySQL | Configuring root access
   command: mysql -uroot mysql -e "UPDATE user SET host='%' WHERE user='root' AND host='{{ ansible_hostname }}'; FLUSH PRIVILEGES";
