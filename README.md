@@ -1,4 +1,5 @@
-##drunomics.mysql##
+# drunomics.mysql
+
 [![Build Status](https://travis-ci.org/drunomics/ansible-role-mysql.svg?branch=master)](https://travis-ci.org/drunomics/ansible-role-mysql)
 Ansible role that installs mysql.
 
